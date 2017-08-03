@@ -1,0 +1,128 @@
+---
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Swagger Matchmaking"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+basePath: "/matchmaking/1.0.0"
+tags:
+- name: "matchmaking"
+  description: "Matchmacking operations"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+schemes:
+- "http"
+paths:
+  /matchmacking/CreateGroup:
+    post:
+      tags:
+      - "matchmaking"
+      summary: "Add a new group to game"
+      operationId: "create_group"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "user"
+        description: "Party members"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/user"
+      responses:
+        201:
+          description: "Group assigned"
+          schema:
+            $ref: "#/definitions/inline_response_201"
+      x-swagger-router-controller: "swagger_server.controllers.matchmaking_controller"
+  /matchmacking/leave:
+    post:
+      tags:
+      - "matchmaking"
+      summary: "Remove group from game"
+      operationId: "delete_group"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "user"
+        description: "User who cancel the queue"
+        required: true
+        schema:
+          type: "object"
+          title: "User"
+      responses:
+        200:
+          description: "Group assigned"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+      x-swagger-router-controller: "swagger_server.controllers.matchmaking_controller"
+  /matchmacking/checkReady:
+    get:
+      tags:
+      - "matchmaking"
+      summary: "Check if user is has party to play"
+      operationId: "get_group_status"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "groupId"
+        in: "query"
+        description: "Status values that need to be considered for filter"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Group assigned"
+          schema:
+            $ref: "#/definitions/inline_response_200_1"
+      x-swagger-router-controller: "swagger_server.controllers.matchmaking_controller"
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      selectedClass:
+        type: "string"
+  user:
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      selectedClass:
+        type: "string"
+  inline_response_201:
+    properties:
+      id:
+        type: "integer"
+      message:
+        type: "string"
+  inline_response_200:
+    properties:
+      message:
+        type: "string"
+  inline_response_200_1_members:
+    properties:
+      id:
+        type: "integer"
+  inline_response_200_1:
+    properties:
+      message:
+        type: "string"
+      members:
+        type: "array"
+        items:
+          $ref: "#/definitions/inline_response_200_1_members"
